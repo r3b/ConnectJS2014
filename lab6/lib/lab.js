@@ -1,5 +1,5 @@
 /*
- * lab4
+ * lab6
  * https://github.com/ApigeeCorporation/lab
  *
  * Copyright (c) 2014 ryan bridges
@@ -23,8 +23,12 @@ exports.isString = function(items) {
 };
 
 var census=require("./census.js");
+var usergrid=require("./usergrid.js");
 var express = require('express');
+var bodyParser = require('body-parser');
+
 var app = express();
+app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 app.get('/', function (req, res) {
   res.send('<html>'+
@@ -51,12 +55,34 @@ app.get("/data/address/:state?/:city?/:street?", function(req, res){
       state=req.query.state||req.params.state;
   census.lookupAddress(street, city, state, function(data){res.json(data);});
 });
+app.get("/cases/:name?", function(req, res){
+  var name=req.query.name||req.params.name;
+  usergrid.getCases(name, function(data){res.json(data.data);});
+});
+//curl -v -X POST http://localhost:3000/cases -d '{"name":"Not Sure", "street":"1572 Boulder Walk Drive", "city":"Atlanta", "state":"Georgia"}' -H "content-type: application/json"
+app.post("/cases", function(req, res){
+  console.log(req.body);
+  var name=req.body.name,
+      street=req.body.street,
+      city=req.body.city,
+      state=req.body.state,
+      lat,lon;
+  //get the lat/lon
+  census.lookupAddress(street, city, state, function(ldata){
+    var match=ldata.result.addressMatches.pop();
+    if(match){
+      lat=match.coordinates.x;
+      lon=match.coordinates.y;
+    }
+    usergrid.saveCase(name, lat, lon, city, state, function(data){res.json(data.entities.pop());});
+  });
+});
 app.use(function(err, req, res){
   console.error(err.stack);
   res.status(500).send("We're here because you broke something.\n"+err.stack);
 });
 var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+  var host = server.address().address,
+      port = server.address().port;
   console.log('server listening at http://%s:%s', host, port);
 });

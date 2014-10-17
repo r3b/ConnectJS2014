@@ -35,7 +35,7 @@ app.get('/', function (req, res) {
               '</body>'+
             '</html>');
 });
-app.use(function(err, req, res, next){
+app.use(function(err, req, res){
   console.error(err.stack);
   res.status(500).send("We're here because you broke something.\n"+err.stack);
 });
@@ -43,4 +43,4 @@ var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('server listening at http://%s:%s', host, port);
-})
+});
