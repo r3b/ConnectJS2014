@@ -1,6 +1,6 @@
 'use strict';
 
-var lab3 = require('../lib/lab3.js');
+var lab = require('../lib/lab.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -30,32 +30,32 @@ exports['awesome'] = {
   'no args': function(test) {
     test.expect(1);
     // tests here
-    test.equal(lab3.awesome(), 'awesome', 'should be awesome.');
+    test.equal(lab.awesome(), 'awesome', 'should be awesome.');
     test.done();
   },
   'isString - no args': function(test) {
     test.expect(1);
     // tests here
-    test.equal(lab3.isString(), null, 'should be null.');
+    test.equal(lab.isString(), null, 'should be null.');
     test.done();
   },
   'isString - one string': function(test) {
     test.expect(1);
     // tests here
 
-    test.equal(lab3.isString('awesome')[0], 'awesome is a string.', 'should be a string.');
+    test.equal(lab.isString('awesome')[0], 'awesome is a string.', 'should be a string.');
     test.done();
   },
   'isString - one number': function(test) {
     test.expect(1);
     // tests here
-    test.equal(lab3.isString(1)[0], '1 is not a string.', 'should not be a string.');
+    test.equal(lab.isString(1)[0], '1 is not a string.', 'should not be a string.');
     test.done();
   },
   'isString - multiple args': function(test) {
     test.expect(1);
     // tests here
-    test.equal(lab3.isString(['awesome', 1]).length, 2, 'should return 2 results.');
+    test.equal(lab.isString(['awesome', 1]).length, 2, 'should return 2 results.');
     test.done();
   },
 };
